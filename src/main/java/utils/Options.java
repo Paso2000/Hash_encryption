@@ -1,4 +1,4 @@
-
+package utils;
 /* <p> Descripci�n: Pr�cticas de Seguridad </p>
 * <p> DISIT de la UEx </p>
 * @author Lorenzo M. Mart�nez Bravo

@@ -1,4 +1,4 @@
-import javax.swing.*;
+import gui.SRTGui;
 
 public class mainTest {
     public static void main(String[] args) {

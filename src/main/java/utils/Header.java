@@ -1,4 +1,4 @@
-
+package utils;
 /* <p> Descripción: Prácticas de Seguridad </p>
 * <p> DISIT de la UEx </p>
 * @author Lorenzo M. Martínez Bravo
@@ -6,7 +6,6 @@
 */
 import java.io.*;
 import java.util.Arrays;
-import java.util.ArrayList;
 
 /**
  * Clase para la gestión de la cabecera que se añade los mensajes cifrados (ficheros).
