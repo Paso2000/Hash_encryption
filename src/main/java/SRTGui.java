@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class SRTGui extends JFrame {
-
     public SRTGui() {
         // Imposta il titolo della finestra
         setTitle("SRT tool");
@@ -66,8 +65,37 @@ public class SRTGui extends JFrame {
         gbc.gridx = 1;
         add(decipherButton, gbc);
 
+        // ActionListener per il pulsante "Cipher"
+        cipherButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Logica per cifrare il messaggio
+                String message = messageField.getText();
+                String password = new String(passwordField.getPassword());
+                String algorithm = (String) algorithmComboBox.getSelectedItem();
+
+                // Esegui la cifratura (inserisci qui la logica)
+                System.out.println("Cifrando: " + message + " con password: " + password + " usando: " + algorithm);
+            }
+        });
+
+        // ActionListener per il pulsante "Decipher"
+        decipherButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Logica per decifrare il messaggio
+                String message = messageField.getText();
+                String password = new String(passwordField.getPassword());
+                String algorithm = (String) algorithmComboBox.getSelectedItem();
+
+                // Esegui la decifratura (inserisci qui la logica)
+                System.out.println("Decifrando: " + message + " con password: " + password + " usando: " + algorithm);
+            }
+        });
+
         // Visualizza la finestra
         setLocationRelativeTo(null); // Centro della finestra
         setVisible(true);
+
     }
 }
