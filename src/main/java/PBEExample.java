@@ -6,47 +6,43 @@ import javax.crypto.spec.PBEParameterSpec;
 
 import org.bouncycastle.util.encoders.Hex;
 
-import java.security.Security;
-
 /**
  * A simple example of PBE mode.
  */
 public class PBEExample
 {
-    public static void main(String[] args)
-            throws Exception
-    {
+    private int iterationCount = 100;
+    private byte[] salt = Hex.decode("0102030405060708");
+    private Cipher cipher;
+    private SecretKey pbeKey;
+    PBEParameterSpec pbeParamSpec;
 
-        char[] passwd  = "passwd".toCharArray();
-        int iterationCount = 100;
-        byte[] salt = Hex.decode("0102030405060708");
-        String algorithm = "PBEWithMD5AndDES";
 
+    public PBEExample(char[] passwd, String algorithm) throws Exception {
         PBEKeySpec  pbeKeySpec = new PBEKeySpec(passwd);
         SecretKeyFactory    keyFact = SecretKeyFactory.getInstance(algorithm);
-        SecretKey pbeKey = keyFact.generateSecret(pbeKeySpec);
-        PBEParameterSpec pbeParamSpec = new PBEParameterSpec(salt, iterationCount);
-
-        Cipher cipher = Cipher.getInstance(algorithm);
-
-        cipher.init(Cipher.ENCRYPT_MODE,pbeKey,pbeParamSpec);
-
-        byte[] input = Hex.decode("a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7"
-                + "a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7");
-
-        System.out.println("input    : " + Hex.toHexString(input));
-
-        byte[] output = cipher.doFinal(input);
-
-        System.out.println("encrypted: " + Hex.toHexString(output));
+        pbeKey = keyFact.generateSecret(pbeKeySpec);
+        pbeParamSpec = new PBEParameterSpec(salt, iterationCount);
+        cipher = Cipher.getInstance(algorithm);
 
 
-        // Decrypt:
-
-        cipher.init(Cipher.DECRYPT_MODE,pbeKey,pbeParamSpec);
-
-        System.out.println("decrypted: "
-                + Hex.toHexString(cipher.doFinal(output)));
     }
+
+        public String Encrypt(String input) throws Exception{
+        cipher.init(Cipher.ENCRYPT_MODE,pbeKey,pbeParamSpec);
+        System.out.println("input    : " + input);
+        byte[] output = cipher.doFinal(Hex.decodeStrict(input));
+        System.out.println("encrypted: " + Hex.toHexString(output));
+        return Hex.toHexString(output);
+}
+
+
+        //byte[] input = Hex.decode("a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7"
+         //       + "a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7");
+
+        public String Decrypt(String input) throws Exception{
+        cipher.init(Cipher.DECRYPT_MODE,pbeKey,pbeParamSpec);
+        return Hex.toHexString(cipher.doFinal(Hex.decodeStrict(input)));
+        }
 }
 
