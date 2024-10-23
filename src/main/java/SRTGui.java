@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 public class SRTGui extends JFrame {
     public SRTGui() {
@@ -64,6 +65,22 @@ public class SRTGui extends JFrame {
         JButton decipherButton = new JButton("Decipher");
         gbc.gridx = 1;
         add(decipherButton, gbc);
+
+        // ActionListener per il pulsante "Browse"
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                int returnValue = fileChooser.showOpenDialog(SRTGui.this);
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    // Ottieni il file selezionato
+                    File selectedFile = fileChooser.getSelectedFile();
+
+                    // Aggiorna il campo di testo con il percorso del file
+                    messageField.setText(selectedFile.getAbsolutePath());
+                }
+            }
+        });
 
         // ActionListener per il pulsante "Cipher"
         cipherButton.addActionListener(new ActionListener() {
