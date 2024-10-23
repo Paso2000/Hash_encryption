@@ -9,7 +9,7 @@ import org.bouncycastle.util.encoders.Hex;
 /**
  * A simple example of PBE mode.
  */
-public class PBEExample
+public class PBEAlgorithm
 {
     private int iterationCount = 100;
     private byte[] salt = Hex.decode("0102030405060708");
@@ -18,8 +18,8 @@ public class PBEExample
     PBEParameterSpec pbeParamSpec;
 
 
-    public PBEExample(char[] passwd, String algorithm) throws Exception {
-        PBEKeySpec  pbeKeySpec = new PBEKeySpec(passwd);
+    public PBEAlgorithm(String passwd, String algorithm) throws Exception {
+        PBEKeySpec  pbeKeySpec = new PBEKeySpec(passwd.toCharArray());
         SecretKeyFactory    keyFact = SecretKeyFactory.getInstance(algorithm);
         pbeKey = keyFact.generateSecret(pbeKeySpec);
         pbeParamSpec = new PBEParameterSpec(salt, iterationCount);
@@ -30,9 +30,9 @@ public class PBEExample
 
         public String Encrypt(String input) throws Exception{
         cipher.init(Cipher.ENCRYPT_MODE,pbeKey,pbeParamSpec);
-        System.out.println("input    : " + input);
-        byte[] output = cipher.doFinal(Hex.decodeStrict(input));
-        System.out.println("encrypted: " + Hex.toHexString(output));
+        //System.out.println("input    : " + input);
+        byte[] output = cipher.doFinal(Hex.encode(input.getBytes()));
+        //System.out.println("encrypted: " + Hex.toHexString(output));
         return Hex.toHexString(output);
 }
 

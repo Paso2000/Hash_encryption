@@ -40,7 +40,8 @@ public class SRTGui extends JFrame {
         gbc.gridy = 2;
         add(algorithmLabel, gbc);
 
-        String[] algorithms = {"Algoritmo 1", "Algoritmo 2", "Algoritmo 3", "Algoritmo 4"};
+        final String algorithms[] = {"none", "PBEWithMD5AndDES", "PBEWithMD5AndTripleDES",
+                "PBEWithSHA1AndDESede", "PBEWithSHA1AndRC2_40" };
         JComboBox<String> algorithmComboBox = new JComboBox<>(algorithms);
         gbc.gridx = 1;
         add(algorithmComboBox, gbc);
@@ -90,9 +91,17 @@ public class SRTGui extends JFrame {
                 String message = messageField.getText();
                 String password = new String(passwordField.getPassword());
                 String algorithm = (String) algorithmComboBox.getSelectedItem();
+                try {
+                    PBEAlgorithm pbe = new PBEAlgorithm(password,algorithm);
+                    String output = pbe.Encrypt(message);
+                    System.out.println("Cifrando: " + message + " con password: " + password + " usando: " + algorithm);
+                    System.out.println("Otteniamo: "+ output);
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
 
                 // Esegui la cifratura (inserisci qui la logica)
-                System.out.println("Cifrando: " + message + " con password: " + password + " usando: " + algorithm);
+
             }
         });
 
