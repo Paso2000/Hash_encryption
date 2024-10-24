@@ -3,8 +3,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileOutputStream;
 
 public class SRTGui extends JFrame {
+    PBEAlgorithm pbe = new PBEAlgorithm();
     public SRTGui() {
         // Imposta il titolo della finestra
         setTitle("SRT tool");
@@ -92,8 +94,7 @@ public class SRTGui extends JFrame {
                 String password = new String(passwordField.getPassword());
                 String algorithm = (String) algorithmComboBox.getSelectedItem();
                 try {
-                    PBEAlgorithm pbe = new PBEAlgorithm(password,algorithm);
-                    String output = pbe.Encrypt(message);
+                    String output = pbe.Encrypt(message,password,algorithm);
                     System.out.println("Cifrando: " + message + " con password: " + password + " usando: " + algorithm);
                     System.out.println("Otteniamo: "+ output);
                 } catch (Exception ex) {
@@ -113,9 +114,13 @@ public class SRTGui extends JFrame {
                 String message = messageField.getText();
                 String password = new String(passwordField.getPassword());
                 String algorithm = (String) algorithmComboBox.getSelectedItem();
-
-                // Esegui la decifratura (inserisci qui la logica)
-                System.out.println("Decifrando: " + message + " con password: " + password + " usando: " + algorithm);
+                try {
+                    String output = pbe.Decrypt(message,password,algorithm);
+                    System.out.println("Decrypting: " + message + " with password: " + password + " using: " + algorithm);
+                    System.out.println("Output: "+ output);
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 
