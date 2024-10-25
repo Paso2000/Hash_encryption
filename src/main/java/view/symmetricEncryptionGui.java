@@ -1,17 +1,16 @@
-package gui;
+package view;
 
-import utils.PBEAlgorithm;
+import model.PBEAlgorithm;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileOutputStream;
 
-public class SRTGui extends JFrame {
+public class symmetricEncryptionGui extends JFrame {
     PBEAlgorithm pbe = new PBEAlgorithm();
-    public SRTGui() {
+    public symmetricEncryptionGui() {
         // Imposta il titolo della finestra
         setTitle("SRT tool");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -85,7 +84,7 @@ public class SRTGui extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
-                int returnValue = fileChooser.showOpenDialog(SRTGui.this);
+                int returnValue = fileChooser.showOpenDialog(symmetricEncryptionGui.this);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     // Ottieni il file selezionato
                     File selectedFile = fileChooser.getSelectedFile();
