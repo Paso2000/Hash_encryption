@@ -1,2 +1,3 @@
-package model;public class PBEAlgorithmFile {
+package model;
+public class PBEAlgorithmFile {
 }
