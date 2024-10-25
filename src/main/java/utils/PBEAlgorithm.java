@@ -3,9 +3,11 @@ package utils;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
+import org.bouncycastle.crypto.io.InvalidCipherTextIOException;
 import org.bouncycastle.jcajce.io.CipherInputStream;
 import org.bouncycastle.jcajce.io.CipherOutputStream;
 import org.bouncycastle.util.encoders.Hex;
@@ -27,58 +29,63 @@ public class PBEAlgorithm
     private SecretKey pbeKey;
     PBEParameterSpec pbeParamSpec;
 
-
         public void Test(String input){
             byte[] inpu = Hex.decode("a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7");
+            // Genera un IV fisso (o casuale ma riutilizzabile)
             System.out.println("input    : " + Hex.toHexString(inpu));
 
         }
 
-        public String Encrypt(String input, String passwd, String algorithm) throws Exception {
-            PBEKeySpec pbeKeySpec = new PBEKeySpec(passwd.toCharArray());
-            //choose the algorithm for creating the key
-            SecretKeyFactory keyFact = SecretKeyFactory.getInstance(algorithm);
-            //generate a secretKey using the passwd
-            pbeKey = keyFact.generateSecret(pbeKeySpec);
-            //create an object that contain aleatory parameter like salt and IC
-            pbeParamSpec = new PBEParameterSpec(salt, iterationCount);
-            //choose the algotithm for the cipher
-            cipher = Cipher.getInstance(algorithm);
-            //create the iv parameter for the Stream
-            cipher.init(Cipher.ENCRYPT_MODE, pbeKey);
-            ByteArrayOutputStream bOut = new ByteArrayOutputStream();
-            CipherOutputStream cOut = new CipherOutputStream(bOut, cipher);
-            cOut.write(input.getBytes(StandardCharsets.UTF_8));
-            cOut.close();
-            return Hex.toHexString(bOut.toByteArray());
-        }
-
-    public String Decrypt(String input, String passwd, String algorithm) throws Exception {
+    public String Encrypt(String input, String passwd, String algorithm) throws Exception {
         PBEKeySpec pbeKeySpec = new PBEKeySpec(passwd.toCharArray());
-        //choose the algorithm for creating the key
         SecretKeyFactory keyFact = SecretKeyFactory.getInstance(algorithm);
-        //generate a secretKey using the passwd
-        pbeKey = keyFact.generateSecret(pbeKeySpec);
-        //create an object that contain aleatory parameter like salt and IC
-        pbeParamSpec = new PBEParameterSpec(salt, iterationCount);
-        //choose the algotithm for the cipher
-        cipher = Cipher.getInstance(algorithm);
-        //create the iv parameter for the Stream
-        AlgorithmParameters ivParams = cipher.getParameters();
+        SecretKey pbeKey = keyFact.generateSecret(pbeKeySpec);
 
-        cipher.init(Cipher.DECRYPT_MODE, pbeKey, ivParams);
-        // decrypt the cipher text
-        byte[] ciphertextWithSalt = Base64.getDecoder().decode(input);
+        // Usa PBEParameterSpec (con salt e iteration count)
+        PBEParameterSpec pbeParamSpec = new PBEParameterSpec(salt, iterationCount);
 
-        ByteArrayInputStream bIn = new ByteArrayInputStream(ciphertextWithSalt);
+        // Inizializza il cipher con padding PKCS5Padding
+        Cipher cipher = Cipher.getInstance(algorithm);
+        cipher.init(Cipher.ENCRYPT_MODE, pbeKey, pbeParamSpec);
 
-        CipherInputStream cIn = new CipherInputStream(bIn, cipher);
+        ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+        CipherOutputStream cOut = new CipherOutputStream(bOut, cipher);
+        cOut.write(input.getBytes(StandardCharsets.UTF_8));
+        cOut.close();
 
-        byte[] decrypted = Streams.readAll(cIn);
-
-        return Hex.toHexString(decrypted);
-
+        return Base64.getEncoder().encodeToString(bOut.toByteArray());
     }
+
+    public String Decrypt(String encryptedInput, String passwd, String algorithm) throws Exception {
+        try {
+            // Decodifica l'input cifrato da base64
+            byte[] encryptedBytes = Base64.getDecoder().decode(encryptedInput);
+
+            PBEKeySpec pbeKeySpec = new PBEKeySpec(passwd.toCharArray());
+            SecretKeyFactory keyFact = SecretKeyFactory.getInstance(algorithm);
+            SecretKey pbeKey = keyFact.generateSecret(pbeKeySpec);
+
+            // Usa lo stesso PBEParameterSpec (con salt e iteration count)
+            PBEParameterSpec pbeParamSpec = new PBEParameterSpec(salt, iterationCount);
+
+            // Inizializza il cipher per la decifratura con padding PKCS5Padding
+            Cipher cipher = Cipher.getInstance(algorithm);
+            cipher.init(Cipher.DECRYPT_MODE, pbeKey, pbeParamSpec);
+
+            ByteArrayInputStream bIn = new ByteArrayInputStream(encryptedBytes);
+            CipherInputStream cIn = new CipherInputStream(bIn, cipher);
+            ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+            Streams.pipeAll(cIn, bOut);
+            cIn.close();
+
+            return new String(bOut.toByteArray(), StandardCharsets.UTF_8);
+        } catch (IllegalArgumentException e) {
+            throw new Exception("Errore nella decodifica Base64 o nei parametri di decifratura.", e);
+        } catch (InvalidCipherTextIOException e) {
+            throw new Exception("Errore nella decifratura: testo cifrato modificato o parametri errati.", e);
+        }
+    }
+
 }
 
 

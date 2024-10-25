@@ -15,7 +15,7 @@ public class SRTGui extends JFrame {
         // Imposta il titolo della finestra
         setTitle("SRT tool");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 300);
+        setSize(400, 500);
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
@@ -72,6 +72,13 @@ public class SRTGui extends JFrame {
         JButton decipherButton = new JButton("Decipher");
         gbc.gridx = 1;
         add(decipherButton, gbc);
+
+        JTextArea outputArea = new JTextArea(5, 10);
+        outputArea.setEditable(false);
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.insets = new Insets(15, 5, 5, 5); // Spaziatura
+        add(outputArea, gbc);
 
         // ActionListener per il pulsante "Browse"
         searchButton.addActionListener(new ActionListener() {
