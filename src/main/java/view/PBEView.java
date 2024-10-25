@@ -23,9 +23,10 @@ public class PBEView extends JFrame {
     inputField = new JTextField();
     passwordField = new JTextField();
     //algorith choose
-    final String algorithms[] = {"PBEWithMD5AndDES", "PBEWithMD5AndTripleDES", "PBEWithSHA1AndDESede", "PBEWithSHA1AndRC2_40" };
-    JComboBox<String> algorithmsBox = new JComboBox<>(algorithms);
-    //output area
+    final String[] algorithms = { "PBEWithMD5AndDES", "PBEWithMD5AndTripleDES", "PBEWithSHA1AndDESede", "PBEWithSHA1AndRC2_40" };
+    algorithmsBox = new JComboBox<>(algorithms); // Inizializza l'algorithmsBox con il campo di istanza
+
+        //output area
     resultArea = new JTextArea(5, 20);
     resultArea.setEditable(false);
 
@@ -59,8 +60,8 @@ public class PBEView extends JFrame {
     }
 
     public String getAlgorithm() {
-        System.out.println((String) algorithmsBox.getSelectedItem());
-        return (String) algorithmsBox.getSelectedItem();
+        System.out.println((String) this.algorithmsBox.getSelectedItem());
+        return (String) this.algorithmsBox.getSelectedItem();
     }
 
     // Metodo per mostrare il risultato
