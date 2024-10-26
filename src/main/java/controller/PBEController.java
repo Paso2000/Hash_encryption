@@ -9,6 +9,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+/**
+ * Used MVC pattern to manage GUI
+ * this class is the pattern controller, it connects to the view and uses
+ * the logic of the model (PBEAlgorithm, PBEAlgorithmFile).
+ */
 public class PBEController {
 
     private PBEAlgorithm pbeAlgorithm;
@@ -20,13 +25,13 @@ public class PBEController {
         this.pbeAlgorithmFile = pbeAlgorithmFile ;
         this.view = view;
 
-        // Collegare i listener ai pulsanti
+        // connect listener to button
         this.view.addEncryptButtonListener(new EncryptButtonListener());
         this.view.addDecryptButtonListener(new DecryptButtonListener());
         this.view.addFileSelectButtonListener(new FileSelectButtonListener());
     }
 
-    // Listener per la cifratura
+    // Cipher controller button
     class EncryptButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             try {
@@ -34,23 +39,21 @@ public class PBEController {
                 String password = view.getPassword();
                 String algorithm = view.getAlgorithm();
                 File selectedFile = view.getSelectedFile();
-
-                // Cifra il testo o il file
                 if (selectedFile != null) {
-                    // Logica per cifrare il file (da implementare)
                     pbeAlgorithmFile.Encrypt(selectedFile, password, algorithm);
-                    view.setResult("File cifrato: " + selectedFile.getName());
+                    view.setResult("Successfully encrypted file: " + selectedFile.getPath() +
+                            "\nSize: " + selectedFile.length() + "byte");
                 } else {
                     String encryptedText = pbeAlgorithm.Encrypt(plaintext, password, algorithm);
-                    view.setResult("Testo cifrato: " + encryptedText);
+                    view.setResult("Ciphertext: " + encryptedText);
                 }
             } catch (Exception ex) {
-                view.showError("Errore durante la cifratura: " + ex.getMessage());
+                view.showError("Error during encryption: " + ex.getMessage());
             }
         }
     }
 
-    // Listener per la decifratura
+    // Decipher controller button
     class DecryptButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             try {
@@ -59,22 +62,21 @@ public class PBEController {
                 String algorithm = view.getAlgorithm();
                 File selectedFile = view.getSelectedFile();
 
-                // Decifra il testo o il file
                 if (selectedFile != null) {
-                    // Logica per decifrare il file (da implementare)
                     pbeAlgorithmFile.Decrypt(selectedFile, password, algorithm);
-                    view.setResult("File decifrato: " + selectedFile.getName());
+                    view.setResult("Successfully encrypted file: " + selectedFile.getPath() +
+                            "\nSize: " + selectedFile.length() + "byte");
                 } else {
                     String decryptedText = pbeAlgorithm.Decrypt(encryptedText, password, algorithm);
-                    view.setResult("Testo decifrato: " + decryptedText);
+                    view.setResult("Plaintext: " + decryptedText);
                 }
             } catch (Exception ex) {
-                view.showError("Errore durante la decifratura: " + ex.getMessage());
+                view.showError("Error during encryption: " + ex.getMessage());
             }
         }
     }
 
-    // Listener per la selezione del file
+    // Listener to select a file
     class FileSelectButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             JFileChooser fileChooser = new JFileChooser();
