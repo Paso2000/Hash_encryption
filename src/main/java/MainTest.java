@@ -1,6 +1,6 @@
 import controller.PBEController;
 import model.PBEAlgorithm;
-import utils.PBEAlgorithmFile;
+import model.PBEAlgorithmFile;
 import view.PBEView;
 
 public class MainTest {

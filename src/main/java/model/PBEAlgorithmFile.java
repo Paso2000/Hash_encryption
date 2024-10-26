@@ -1,4 +1,4 @@
-package utils;
+package model;
 
 import org.bouncycastle.jcajce.io.CipherOutputStream;
 import org.bouncycastle.util.encoders.Hex;

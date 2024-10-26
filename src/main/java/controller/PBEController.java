@@ -1,7 +1,7 @@
 package controller;
 
 import model.PBEAlgorithm;
-import utils.PBEAlgorithmFile;
+import model.PBEAlgorithmFile;
 import view.PBEView;
 
 import javax.swing.*;
@@ -20,9 +20,9 @@ public class PBEController {
     private PBEAlgorithmFile pbeAlgorithmFile;
     private PBEView view;
 
-    public PBEController(PBEAlgorithm pbeAlgorithm,PBEAlgorithmFile pbeAlgorithmFile,  PBEView view) {
+    public PBEController(PBEAlgorithm pbeAlgorithm, PBEAlgorithmFile pbeAlgorithmFile, PBEView view) {
         this.pbeAlgorithm = pbeAlgorithm;
-        this.pbeAlgorithmFile = pbeAlgorithmFile ;
+        this.pbeAlgorithmFile = pbeAlgorithmFile;
         this.view = view;
 
         // connect listener to button
