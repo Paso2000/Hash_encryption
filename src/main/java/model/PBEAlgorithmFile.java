@@ -60,7 +60,7 @@ public class PBEAlgorithmFile {
         cipher.init(Cipher.DECRYPT_MODE, pbeKey, pbeParamSpec);
 
         // Creazione del percorso per il file decifrato
-        String decryptedFilePath = encryptedInput.getParent() + File.separator + encryptedInput.getName().replaceFirst("[.][^.]+$", "") + "_decrypted.pdf";
+        String decryptedFilePath = encryptedInput.getParent() + File.separator + encryptedInput.getName().replaceFirst("[.][^.]+$", "") + "_decrypted.cla";
         File decryptedFile = new File(decryptedFilePath);
 
         try (FileOutputStream fileOut = new FileOutputStream(decryptedFile);
