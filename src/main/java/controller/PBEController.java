@@ -15,9 +15,9 @@ public class PBEController {
     private PBEAlgorithmFile pbeAlgorithmFile;
     private PBEView view;
 
-    public PBEController(PBEAlgorithm pbeAlgorithm,  PBEView view) {
+    public PBEController(PBEAlgorithm pbeAlgorithm,PBEAlgorithmFile pbeAlgorithmFile,  PBEView view) {
         this.pbeAlgorithm = pbeAlgorithm;
-        //this.pbeAlgorithmFile =  ;
+        this.pbeAlgorithmFile = pbeAlgorithmFile ;
         this.view = view;
 
         // Collegare i listener ai pulsanti
@@ -38,6 +38,7 @@ public class PBEController {
                 // Cifra il testo o il file
                 if (selectedFile != null) {
                     // Logica per cifrare il file (da implementare)
+                    pbeAlgorithmFile.Encrypt(selectedFile, password, algorithm);
                     view.setResult("File cifrato: " + selectedFile.getName());
                 } else {
                     String encryptedText = pbeAlgorithm.Encrypt(plaintext, password, algorithm);
@@ -61,7 +62,7 @@ public class PBEController {
                 // Decifra il testo o il file
                 if (selectedFile != null) {
                     // Logica per decifrare il file (da implementare)
-
+                    pbeAlgorithmFile.Decrypt(selectedFile, password, algorithm);
                     view.setResult("File decifrato: " + selectedFile.getName());
                 } else {
                     String decryptedText = pbeAlgorithm.Decrypt(encryptedText, password, algorithm);
