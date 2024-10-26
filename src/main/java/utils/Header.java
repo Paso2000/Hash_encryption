@@ -1,9 +1,5 @@
 package utils;
-/* <p> Descripción: Prácticas de Seguridad </p>
-* <p> DISIT de la UEx </p>
-* @author Lorenzo M. Martínez Bravo
-* @version 1.0, 2022
-*/
+
 import java.io.*;
 import java.util.Arrays;
 
@@ -132,30 +128,6 @@ public class Header extends BasicHeader {
    * fichero y recuperandola posteriomente.
    * 
    */
-  public void test() {
-    try {
-    	String fileName = "fileheader.prueba";
-        FileOutputStream fos = new FileOutputStream(fileName);
-        save(fos);
-        fos.close();
-
-        Header fh2= new Header();
-        FileInputStream fis = new FileInputStream(fileName);
-        if (fh2.load(fis)){
-        	System.out.print("\nOperación: " +fh2.getOperation());
-        	System.out.print(" Algoritmo1: "+fh2.getAlgorithm1());
-        	System.out.print(" Algoritmo2: "+fh2.getAlgorithm2());
-        	System.out.print(" Data: ");
-        	for(byte i=0;i<fh2.getData().length;i++)
-        		System.out.print(String.format("0x%h ", fh2.getData()[i]));
-        }
-        else
-        	System.out.println("Error en la carga");
-        fis.close();
-    }
-    catch (Exception e) {e.printStackTrace(); };
-  }
-  
   /**
    * Programa principal para prueba
    * 
