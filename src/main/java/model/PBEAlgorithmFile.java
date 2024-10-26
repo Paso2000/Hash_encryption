@@ -15,6 +15,11 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+/**
+ * Used MVC pattern to manage GUI
+ * this class is the pattern model, is used by controller.
+ * PBEAlgorithm is logic class to handle encryption/decryption of files.
+ */
 public class PBEAlgorithmFile {
     private int iterationCount = 100;
     private byte[] salt = Hex.decode("0102030405060708");
@@ -26,7 +31,6 @@ public class PBEAlgorithmFile {
      * @param passwd    String
      * @param algorithm String
      * @return a ciphertext File.CIF
-     *
      */
     public void Encrypt(File input, String passwd, String algorithm) throws Exception {
         Path inputPath = input.toPath();
@@ -46,20 +50,19 @@ public class PBEAlgorithmFile {
         String encryptedFilePath = input.getParent() + File.separator + input.getName().replaceFirst("[.][^.]+$", "") + ".CIF";
         File encryptedFile = new File(encryptedFilePath);
         //creating the header with the correspondents data
-        Header header = new Header(Options.OP_SYMMETRIC_CIPHER,algorithm, Options.OP_NONE_ALGORITHM,salt);
+        Header header = new Header(Options.OP_SYMMETRIC_CIPHER, algorithm, Options.OP_NONE_ALGORITHM, salt);
 
         //create the output stram
         try (FileOutputStream fileOut = new FileOutputStream(encryptedFile);
              CipherOutputStream cOut = new CipherOutputStream(fileOut, cipher)) {
             //save the header on the output stream
-            if(header.save(cOut)){
+            if (header.save(cOut)) {
                 System.out.println("Symmetric encryption: " + Options.OP_SYMMETRIC_CIPHER);
-                System.out.println("Algorithm: "+algorithm);
-                System.out.println("With salt:"+ salt);
-                System.out.println("Iteretion count:"+ iterationCount);
+                System.out.println("Algorithm: " + algorithm);
+                System.out.println("With salt:" + salt);
+                System.out.println("Iteretion count:" + iterationCount);
 
-            }
-            else {
+            } else {
                 System.out.println("load non andato a buon fine");
             }
             //write and encrypt the file bytes on the output stream
