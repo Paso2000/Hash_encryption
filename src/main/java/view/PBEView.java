@@ -5,6 +5,10 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+/**
+ * Used MVC pattern to manage GUI
+ * this class is the pattern view, where are defined the components GUI.
+ */
 public class PBEView extends JFrame {
     private JTextField inputField;
     private JTextField passwordField;
@@ -14,7 +18,7 @@ public class PBEView extends JFrame {
     private JButton decryptButton;
     private JButton fileSelectButton;
     private JLabel selectedFileLabel;
-    private File selectedFile;  // Per salvare il file selezionato
+    private File selectedFile;
 
     public PBEView() {
         setTitle("Symmetric Encryption Tool");
@@ -34,33 +38,32 @@ public class PBEView extends JFrame {
         resultArea = new JTextArea(5, 20);
         resultArea.setEditable(false);
 
-        // Pulsanti per cifrare e decifrare
-        encryptButton = new JButton("Cifra");
-        decryptButton = new JButton("Decifra");
+        // encrypt/decrypt button
+        encryptButton = new JButton("encrypt");
+        decryptButton = new JButton("decrypt");
 
-        // Pulsante per selezionare file
-        fileSelectButton = new JButton("Seleziona File");
-        selectedFileLabel = new JLabel("Nessun file selezionato");
+        // button to select a file
+        fileSelectButton = new JButton("Select a File");
+        selectedFileLabel = new JLabel("No file selected");
 
-        // Aggiunta dei componenti alla finestra
-        add(new JLabel("Inserisci il testo:"));
+        //add components in the panel
+        add(new JLabel("Insert text:"));
         add(inputField);
-        add(new JLabel("Inserisci la password:"));
+        add(new JLabel("Insert password:"));
         add(passwordField);
-        add(new JLabel("Algoritmo:"));
+        add(new JLabel("Algorithms:"));
         add(algorithmsBox);
         add(fileSelectButton);
-        add(selectedFileLabel);  // Per mostrare il file selezionato
+        add(selectedFileLabel);
         add(encryptButton);
         add(decryptButton);
-        add(new JLabel("Risultato:"));
+        add(new JLabel("Output:"));
         add(new JScrollPane(resultArea));
 
-        // Mostra la finestra
         setVisible(true);
     }
 
-    // Metodi per ottenere i dati dalla GUI
+    // Methods to get GUI info
     public String getInputText() {
         return inputField.getText();
     }
@@ -74,21 +77,21 @@ public class PBEView extends JFrame {
     }
 
     public File getSelectedFile() {
-        return selectedFile;  // Restituisce il file selezionato
+        return selectedFile;
     }
 
-    // Metodo per mostrare il file selezionato
+    // Methods to select a file
     public void setSelectedFile(File file) {
         this.selectedFile = file;
-        selectedFileLabel.setText(file != null ? file.getName() : "Nessun file selezionato");
+        selectedFileLabel.setText(file != null ? file.getName() : "No file selected");
     }
 
-    // Metodo per mostrare il risultato
+    // Methods to view output
     public void setResult(String result) {
         resultArea.setText(result);
     }
 
-    // Listener per i pulsanti
+    // button listener
     public void addEncryptButtonListener(ActionListener listener) {
         encryptButton.addActionListener(listener);
     }
@@ -97,12 +100,11 @@ public class PBEView extends JFrame {
         decryptButton.addActionListener(listener);
     }
 
-    // Listener per il pulsante di selezione del file
     public void addFileSelectButtonListener(ActionListener listener) {
         fileSelectButton.addActionListener(listener);
     }
 
-    // Metodo per mostrare messaggi di errore
+    // Methods to view error message
     public void showError(String errorMessage) {
         JOptionPane.showMessageDialog(this, errorMessage);
     }
