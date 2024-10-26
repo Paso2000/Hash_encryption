@@ -2,6 +2,8 @@ package model;
 
 import org.bouncycastle.jcajce.io.CipherOutputStream;
 import org.bouncycastle.util.encoders.Hex;
+import utils.Header;
+import utils.Options;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
@@ -17,7 +19,7 @@ public class PBEAlgorithmFile {
     private int iterationCount = 100;
     private byte[] salt = Hex.decode("0102030405060708");
 
-    // Metodo per crittografare un file e salvarlo come .CIF
+    // File encryption method that  .CIF
     public void Encrypt(File input, String passwd, String algorithm) throws Exception {
         Path inputPath = input.toPath();
         byte[] fileBytes = Files.readAllBytes(inputPath);
@@ -35,10 +37,23 @@ public class PBEAlgorithmFile {
         // Creazione del percorso per il file cifrato con estensione .CIF
         String encryptedFilePath = input.getParent() + File.separator + input.getName().replaceFirst("[.][^.]+$", "") + ".CIF";
         File encryptedFile = new File(encryptedFilePath);
+        Header header = new Header(Options.OP_SYMMETRIC_CIPHER,algorithm, Options.OP_NONE_ALGORITHM,salt);
+
 
         try (FileOutputStream fileOut = new FileOutputStream(encryptedFile);
              CipherOutputStream cOut = new CipherOutputStream(fileOut, cipher)) {
+            if(header.save(cOut)){
+                System.out.println("Symmetric encryption: " + Options.OP_SYMMETRIC_CIPHER);
+                System.out.println("Algorithm: "+algorithm);
+                System.out.println("With salt:"+ salt);
+                System.out.println("Iteretion count:"+ iterationCount);
+
+            }
+            else {
+                System.out.println("load non andato a buon fine");
+            }
             cOut.write(fileBytes);
+
         }
 
         System.out.println("File cifrato salvato come: " + encryptedFile.getAbsolutePath());
@@ -60,12 +75,11 @@ public class PBEAlgorithmFile {
         cipher.init(Cipher.DECRYPT_MODE, pbeKey, pbeParamSpec);
 
         // Creazione del percorso per il file decifrato
-        String decryptedFilePath = encryptedInput.getParent() + File.separator + encryptedInput.getName().replaceFirst("[.][^.]+$", "") + "_decrypted.cla";
+        String decryptedFilePath = encryptedInput.getParent() + File.separator + encryptedInput.getName().replaceFirst("[.][^.]+$", "") + "_decrypted.PDF";
         File decryptedFile = new File(decryptedFilePath);
 
         try (FileOutputStream fileOut = new FileOutputStream(decryptedFile);
              CipherInputStream cIn = new CipherInputStream(new ByteArrayInputStream(encryptedBytes), cipher)) {
-
             byte[] buffer = new byte[4096];
             int bytesRead;
             while ((bytesRead = cIn.read(buffer)) != -1) {
