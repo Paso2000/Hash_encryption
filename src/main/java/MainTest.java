@@ -2,7 +2,7 @@ import controller.PBEController;
 import model.PBEAlgorithm;
 import view.PBEView;
 
-public class mainTest {
+public class MainTest {
     public static void main(String[] args) {
         PBEAlgorithm model = new PBEAlgorithm();
         PBEView view = new PBEView(); // Cambiato per la GUI
