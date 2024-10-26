@@ -1,6 +1,7 @@
 package controller;
 
 import model.PBEAlgorithm;
+import utils.PBEAlgorithmFile;
 import view.PBEView;
 
 import javax.swing.*;
@@ -11,10 +12,12 @@ import java.io.File;
 public class PBEController {
 
     private PBEAlgorithm pbeAlgorithm;
+    private PBEAlgorithmFile pbeAlgorithmFile;
     private PBEView view;
 
-    public PBEController(PBEAlgorithm pbeAlgorithm, PBEView view) {
+    public PBEController(PBEAlgorithm pbeAlgorithm,  PBEView view) {
         this.pbeAlgorithm = pbeAlgorithm;
+        //this.pbeAlgorithmFile =  ;
         this.view = view;
 
         // Collegare i listener ai pulsanti
@@ -58,6 +61,7 @@ public class PBEController {
                 // Decifra il testo o il file
                 if (selectedFile != null) {
                     // Logica per decifrare il file (da implementare)
+
                     view.setResult("File decifrato: " + selectedFile.getName());
                 } else {
                     String decryptedText = pbeAlgorithm.Decrypt(encryptedText, password, algorithm);
