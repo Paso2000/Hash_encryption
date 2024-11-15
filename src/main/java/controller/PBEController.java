@@ -4,6 +4,7 @@ import model.HashAlgorithm;
 import model.HashAlgorithmFile;
 import model.PBEAlgorithm;
 import model.PBEAlgorithmFile;
+import view.NewView;
 import view.PBEView;
 
 import javax.swing.*;
@@ -23,9 +24,9 @@ public class PBEController {
 
     private HashAlgorithmFile hashAlgorithmFile;
     private HashAlgorithm hashAlgorithm;
-    private PBEView view;
+    private NewView view;
 
-    public PBEController(PBEAlgorithm pbeAlgorithm, PBEAlgorithmFile pbeAlgorithmFile, PBEView view, HashAlgorithm hashAlgorithm, HashAlgorithmFile hashAlgorithmFile) {
+    public PBEController(PBEAlgorithm pbeAlgorithm, PBEAlgorithmFile pbeAlgorithmFile,NewView view, HashAlgorithm hashAlgorithm, HashAlgorithmFile hashAlgorithmFile) {
         this.pbeAlgorithm = pbeAlgorithm;
         this.pbeAlgorithmFile = pbeAlgorithmFile;
         this.hashAlgorithm= hashAlgorithm;
@@ -35,7 +36,7 @@ public class PBEController {
         // connect listener to button
         this.view.addEncryptButtonListener(new EncryptButtonListener());
         this.view.addDecryptButtonListener(new DecryptButtonListener());
-        this.view.addFileSelectButtonListener(new FileSelectButtonListener());
+        //this.view.addFileSelectButtonListener(new FileSelectButtonListener());
     }
 
     // Cipher controller button
