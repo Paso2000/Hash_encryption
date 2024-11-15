@@ -21,7 +21,7 @@ import static utils.JCAUtils.createDigestCalculator;
 
 public class HashAlgorithm {
 
-    public byte[] ProtectMessageHash(String input,String algorithm) throws Exception {
+    public byte[] protectMessageHash(String input,String algorithm) throws Exception {
             Security.addProvider(new BouncyCastleProvider());
 
             DigestCalculator digCalc = createDigestCalculator(algorithm);
@@ -31,9 +31,7 @@ public class HashAlgorithm {
             dOut.write(Strings.toByteArray(input));
 
             dOut.close();
-
-            System.out.println(Hex.toHexString(digCalc.getDigest()));
-            return null;
+            return digCalc.getDigest();
 
     }
 }

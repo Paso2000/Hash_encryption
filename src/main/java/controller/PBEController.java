@@ -4,8 +4,8 @@ import model.HashAlgorithm;
 import model.HashAlgorithmFile;
 import model.PBEAlgorithm;
 import model.PBEAlgorithmFile;
-import view.NewView;
-import view.PBEView;
+import org.bouncycastle.util.encoders.Hex;
+import view.View;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -24,9 +24,10 @@ public class PBEController {
 
     private HashAlgorithmFile hashAlgorithmFile;
     private HashAlgorithm hashAlgorithm;
-    private NewView view;
+    private View view;
+    private byte[] result;
 
-    public PBEController(PBEAlgorithm pbeAlgorithm, PBEAlgorithmFile pbeAlgorithmFile,NewView view, HashAlgorithm hashAlgorithm, HashAlgorithmFile hashAlgorithmFile) {
+    public PBEController(PBEAlgorithm pbeAlgorithm, PBEAlgorithmFile pbeAlgorithmFile, View view, HashAlgorithm hashAlgorithm, HashAlgorithmFile hashAlgorithmFile) {
         this.pbeAlgorithm = pbeAlgorithm;
         this.pbeAlgorithmFile = pbeAlgorithmFile;
         this.hashAlgorithm= hashAlgorithm;
@@ -37,6 +38,26 @@ public class PBEController {
         this.view.addEncryptButtonListener(new EncryptButtonListener());
         this.view.addDecryptButtonListener(new DecryptButtonListener());
         //this.view.addFileSelectButtonListener(new FileSelectButtonListener());
+        this.view.addMessageHashButtonListener(new MessageHashButtonListener());
+    }
+
+    class MessageHashButtonListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String plaintext = view.getInputText();
+            String value = view.getHashValue();
+            String hashFunction = view.getHashAlgorithm();
+            System.out.println(plaintext + hashFunction);
+            try {
+                result = hashAlgorithm.protectMessageHash(plaintext,hashFunction);
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+            view.setResult(Hex.toHexString(result));
+
+
+        }
     }
 
     // Cipher controller button
@@ -44,9 +65,8 @@ public class PBEController {
         public void actionPerformed(ActionEvent e) {
             try {
                 String plaintext = view.getInputText();
-                String password = view.getPassword();
+                String password = view.getHashValue();
                 String SymmetricAlgorithm = view.getSymmetricAlgorithm();
-                String HashAlgorithm = view.getHashAlgorithm();
                 File selectedFile = view.getSelectedFile();
                 if (selectedFile != null) {
                     pbeAlgorithmFile.Encrypt(selectedFile, password, SymmetricAlgorithm);
@@ -67,7 +87,7 @@ public class PBEController {
         public void actionPerformed(ActionEvent e) {
             try {
                 String encryptedText = view.getInputText();
-                String password = view.getPassword();
+                String password = view.getHashValue();
                 String SymmetricAlgorithm = view.getSymmetricAlgorithm();
                 File selectedFile = view.getSelectedFile();
 

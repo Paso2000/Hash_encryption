@@ -3,24 +3,31 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.Arrays;
 
-public class NewView extends JFrame{
+public class View extends JFrame{
         private File selectedFile;
         private JTextArea textArea = new JTextArea();
-        private JComboBox<String> comboCifrado;
+        private JComboBox<String> comboCipher;
         private JComboBox<String> comboHash;
         private JMenuItem cipher;
         private JMenuItem decipher;
         private JMenuItem protegerWithHash;
         private JMenuItem verificarHash;
-        private JMenuItem protegerMensajeWithHash;
-        private JMenuItem verificarMensajeHash;
+        private JMenuItem protegerMessageWithHash;
+        private JMenuItem verificarMessageHash;
         private JMenuItem Exit;
+        private JPanel passwordPanel;
+        private JLabel passwordLabel;
+        private JPasswordField passwordField;
+        private JLabel labelCipher;
+        private JLabel labelHash;
 
 
 
 
-    public NewView() {
+
+    public View() {
             // Crea il frame
             JFrame frame = new JFrame("Practice 3 of SRT");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -69,8 +76,8 @@ public class NewView extends JFrame{
             verificarHash = new JMenuItem("Verify hash");
             verificarHash.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
 
-             protegerMensajeWithHash = new JMenuItem("Protect message with hash");
-             verificarMensajeHash = new JMenuItem("Verify message hash");
+             protegerMessageWithHash = new JMenuItem("Protect message with hash");
+             verificarMessageHash = new JMenuItem("Verify message hash");
 
              Exit = new JMenuItem("Exit");
             Exit.addActionListener(e -> System.exit(0));
@@ -80,58 +87,66 @@ public class NewView extends JFrame{
             menuFile.add(decipher);
             menuFile.add(protegerWithHash);
             menuFile.add(verificarHash);
-            menuFile.add(protegerMensajeWithHash);
-            menuFile.add(verificarMensajeHash);
+            menuFile.add(protegerMessageWithHash);
+            menuFile.add(verificarMessageHash);
             menuFile.addSeparator(); // Aggiunge una linea di separazione
             menuFile.add(Exit);
+            labelCipher = new JLabel("Algorithm Cipher");
+            comboCipher = new JComboBox<>(new String[] {
+                "PBEWithMD5AndDES", "PBEWithMD5AndTripleDES", "PBEWithSHA1AndDESede", "PBEWithSHA1AndRC2_40"
+            });
+            comboCipher.setSelectedItem("PBEWithMD5AndDES");
+
+
+        // Componenti per Algoritmo Hash/HMac
+        labelHash = new JLabel("Algorithm Hash/HMac");
+        comboHash = new JComboBox<>(new String[] {
+                "MD2", "MD5", "SHA-1", "SHA-256", "SHA-384", "SHA-512",
+                "HmacMD5", "HmacSHA1", "HmacSHA256", "HmacSHA384", "HmacSHA512"
+            });
+        comboHash.setSelectedItem("HmacSHA256");
 
             JMenuItem algorithm = new JMenuItem("Algorithm");
             algorithm.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     // Crea e mostra il dialogo di configurazione
-                    JDialog dialog = new JDialog(frame, "Opciones", true);
+                    JDialog dialog = new JDialog(frame, "Option", true);
                     dialog.setLayout(new GridLayout(4, 1, 10, 10));
                     dialog.setSize(300, 200);
                     dialog.setLocationRelativeTo(frame);
 
                     // Componenti per Algoritmo Cifrado
-                    JLabel labelCifrado = new JLabel("Algoritmo Cifrado");
-                    comboCifrado = new JComboBox<>(new String[] {
-                            "PBEWithMD5AndDES", "PBEWithMD5AndTripleDES", "PBEWithSHA1AndDESede", "PBEWithSHA1AndRC2_40"
-                    });
 
-                    // Componenti per Algoritmo Hash/HMac
-                    JLabel labelHash = new JLabel("Algoritmo Hash/HMac");
-                    comboHash = new JComboBox<>(new String[] {
-                            "MD2", "MD5", "SHA-1", "SHA-256", "SHA-384", "SHA-512",
-                            "HmacMD5", "HmacSHA1", "HmacSHA256", "HmacSHA384", "HmacSHA512"
-                    });
+
 
                     // Aggiungi i componenti al dialogo
-                    dialog.add(labelCifrado);
-                    dialog.add(comboCifrado);
+                    dialog.add(labelCipher);
+                    dialog.add(comboCipher);
                     dialog.add(labelHash);
                     dialog.add(comboHash);
-
                     // Rendi visibile il dialogo
                     dialog.setVisible(true);
                 }
             });
             menuOption.add(algorithm);
 
-            textArea.setLineWrap(true); // Permette l'andata a capo automatica
-            textArea.setWrapStyleWord(true); // Andata a capo sui confini delle parole
+         passwordPanel = new JPanel(new BorderLayout());
+         passwordLabel = new JLabel("Value: ");
+         passwordField = new JPasswordField(20);
+         passwordPanel.add(passwordLabel, BorderLayout.WEST);
+         passwordPanel.add(passwordField, BorderLayout.CENTER);
+
+        textArea.setLineWrap(true); // Permette l'andata a capo automatica
+        textArea.setWrapStyleWord(true); // Andata a capo sui confini delle parole
 
             // Aggiungi la JTextArea a uno JScrollPane per abilitarne lo scorrimento
-            JScrollPane scrollPane = new JScrollPane(textArea);
-            frame.add(scrollPane, BorderLayout.CENTER);
 
-
-            // Aggiungi la barra dei menu al frame
-            frame.setJMenuBar(menuBar);
-
-            // Rendi visibile il frame
-            frame.setVisible(true);
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        frame.setLayout(new BorderLayout());
+        frame.setJMenuBar(menuBar);
+        frame.add(passwordPanel, BorderLayout.NORTH);
+        frame.add(scrollPane, BorderLayout.CENTER);
+        frame.setVisible(true);
 
 
         }
@@ -147,13 +162,11 @@ public class NewView extends JFrame{
         return textArea.getText();
     }
 
-   // public String getPassword() {
-    //  return passwordField.getText();
-    //}
-
-    public String getSymmetricAlgorithm() {
-        return (String) comboCifrado.getSelectedItem();
+    public String getHashValue() {
+      return Arrays.toString(passwordField.getPassword());
     }
+
+    public String getSymmetricAlgorithm() {return (String) comboCipher.getSelectedItem();}
 
     public String getHashAlgorithm(){return (String) comboHash.getSelectedItem(); }
 
@@ -172,7 +185,7 @@ public class NewView extends JFrame{
         decipher.addActionListener(listener);
     }
     public void addMessageHashButtonListener(ActionListener listener) {
-        protegerMensajeWithHash.addActionListener(listener);
+        protegerMessageWithHash.addActionListener(listener);
     }
 
    // public void addFileSelectButtonListener(ActionListener listener) {
