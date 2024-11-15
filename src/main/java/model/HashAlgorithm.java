@@ -9,5 +9,31 @@ package model;
 // viene utilizzato un valore segreto che deve essere fornito dall'utente; questo valore segreto viene utilizzato come
 // SEGRETO CONDIVISO o come passwd per generare una chiave segreta, a seconda dell'algoritmo scelto.
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.operator.DigestCalculator;
+import org.bouncycastle.util.Strings;
+import org.bouncycastle.util.encoders.Hex;
+
+import java.io.OutputStream;
+import java.security.Security;
+
+import static utils.JCAUtils.createDigestCalculator;
+
 public class HashAlgorithm {
+
+    public byte[] ProtectMessageHash(String input,String algorithm) throws Exception {
+            Security.addProvider(new BouncyCastleProvider());
+
+            DigestCalculator digCalc = createDigestCalculator(algorithm);
+
+            OutputStream dOut = digCalc.getOutputStream();
+
+            dOut.write(Strings.toByteArray(input));
+
+            dOut.close();
+
+            System.out.println(Hex.toHexString(digCalc.getDigest()));
+            return null;
+
+    }
 }

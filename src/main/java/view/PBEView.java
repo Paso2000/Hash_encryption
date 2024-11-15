@@ -12,7 +12,9 @@ import java.io.File;
 public class PBEView extends JFrame {
     private JTextField inputField;
     private JTextField passwordField;
-    private JComboBox<String> algorithmsBox;
+    private JComboBox<String> SymmetricAlgorithmsBox;
+    private JComboBox<String> HashAlgorithmsBox;
+
     private JTextArea resultArea;
     private JButton encryptButton;
     private JButton decryptButton;
@@ -31,8 +33,11 @@ public class PBEView extends JFrame {
         passwordField = new JTextField();
 
         // Algorith choose
-        final String[] algorithms = { "PBEWithMD5AndDES", "PBEWithMD5AndTripleDES", "PBEWithSHA1AndDESede", "PBEWithSHA1AndRC2_40" };
-        algorithmsBox = new JComboBox<>(algorithms);
+        final String[] SymmetricAlgorithms = { "PBEWithMD5AndDES", "PBEWithMD5AndTripleDES", "PBEWithSHA1AndDESede", "PBEWithSHA1AndRC2_40" };
+        SymmetricAlgorithmsBox = new JComboBox<>(SymmetricAlgorithms);
+        final String[] HashAlgorithms = {"MD2", "MD5", "SHA-1", "SHA-256", "SHA-384", "SHA-512",
+                "HmacMD5", "HmacSHA1", "HmacSHA256", "HmacSHA384", "HmacSHA512"};
+        HashAlgorithmsBox = new JComboBox<>(HashAlgorithms);
 
         // Output area
         resultArea = new JTextArea(5, 20);
@@ -52,7 +57,8 @@ public class PBEView extends JFrame {
         add(new JLabel("Insert password:"));
         add(passwordField);
         add(new JLabel("Algorithms:"));
-        add(algorithmsBox);
+        add(SymmetricAlgorithmsBox);
+        add(HashAlgorithmsBox);
         add(fileSelectButton);
         add(selectedFileLabel);
         add(encryptButton);
@@ -72,9 +78,11 @@ public class PBEView extends JFrame {
         return passwordField.getText();
     }
 
-    public String getAlgorithm() {
-        return (String) algorithmsBox.getSelectedItem();
+    public String getSymmetricAlgorithm() {
+        return (String) SymmetricAlgorithmsBox.getSelectedItem();
     }
+
+    public String getHashAlgorithm(){return (String) HashAlgorithmsBox.getSelectedItem(); }
 
     public File getSelectedFile() {
         return selectedFile;

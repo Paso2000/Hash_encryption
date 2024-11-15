@@ -1,5 +1,7 @@
 package controller;
 
+import model.HashAlgorithm;
+import model.HashAlgorithmFile;
 import model.PBEAlgorithm;
 import model.PBEAlgorithmFile;
 import view.PBEView;
@@ -18,11 +20,16 @@ public class PBEController {
 
     private PBEAlgorithm pbeAlgorithm;
     private PBEAlgorithmFile pbeAlgorithmFile;
+
+    private HashAlgorithmFile hashAlgorithmFile;
+    private HashAlgorithm hashAlgorithm;
     private PBEView view;
 
-    public PBEController(PBEAlgorithm pbeAlgorithm, PBEAlgorithmFile pbeAlgorithmFile, PBEView view) {
+    public PBEController(PBEAlgorithm pbeAlgorithm, PBEAlgorithmFile pbeAlgorithmFile, PBEView view, HashAlgorithm hashAlgorithm, HashAlgorithmFile hashAlgorithmFile) {
         this.pbeAlgorithm = pbeAlgorithm;
         this.pbeAlgorithmFile = pbeAlgorithmFile;
+        this.hashAlgorithm= hashAlgorithm;
+        this.hashAlgorithmFile=hashAlgorithmFile;
         this.view = view;
 
         // connect listener to button
@@ -37,14 +44,15 @@ public class PBEController {
             try {
                 String plaintext = view.getInputText();
                 String password = view.getPassword();
-                String algorithm = view.getAlgorithm();
+                String SymmetricAlgorithm = view.getSymmetricAlgorithm();
+                String HashAlgorithm = view.getHashAlgorithm();
                 File selectedFile = view.getSelectedFile();
                 if (selectedFile != null) {
-                    pbeAlgorithmFile.Encrypt(selectedFile, password, algorithm);
+                    pbeAlgorithmFile.Encrypt(selectedFile, password, SymmetricAlgorithm);
                     view.setResult("Successfully encrypted file: " + selectedFile.getPath() +
                             "\nSize: " + selectedFile.length() + "byte");
                 } else {
-                    String encryptedText = pbeAlgorithm.Encrypt(plaintext, password, algorithm);
+                    String encryptedText = pbeAlgorithm.Encrypt(plaintext, password, SymmetricAlgorithm);
                     view.setResult("Ciphertext: " + encryptedText);
                 }
             } catch (Exception ex) {
@@ -59,15 +67,15 @@ public class PBEController {
             try {
                 String encryptedText = view.getInputText();
                 String password = view.getPassword();
-                String algorithm = view.getAlgorithm();
+                String SymmetricAlgorithm = view.getSymmetricAlgorithm();
                 File selectedFile = view.getSelectedFile();
 
                 if (selectedFile != null) {
-                    pbeAlgorithmFile.Decrypt(selectedFile, password, algorithm);
+                    pbeAlgorithmFile.Decrypt(selectedFile, password, SymmetricAlgorithm);
                     view.setResult("Successfully encrypted file: " + selectedFile.getPath() +
                             "\nSize: " + selectedFile.length() + "byte");
                 } else {
-                    String decryptedText = pbeAlgorithm.Decrypt(encryptedText, password, algorithm);
+                    String decryptedText = pbeAlgorithm.Decrypt(encryptedText, password, SymmetricAlgorithm);
                     view.setResult("Plaintext: " + decryptedText);
                 }
             } catch (Exception ex) {

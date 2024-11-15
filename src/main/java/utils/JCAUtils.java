@@ -33,30 +33,12 @@ public class JCAUtils {
      * @return a DigestCalculator for the digestName.
      */
     public static DigestCalculator createDigestCalculator(String digestName)
-            throws OperatorCreationException
-        {
-            DigestAlgorithmIdentifierFinder algFinder =
-                    new DefaultDigestAlgorithmIdentifierFinder();
-            DigestCalculatorProvider digCalcProv =
-                    new JcaDigestCalculatorProviderBuilder().setProvider("BC").build();
+            throws OperatorCreationException {
+        DigestAlgorithmIdentifierFinder algFinder =
+                new DefaultDigestAlgorithmIdentifierFinder();
+        DigestCalculatorProvider digCalcProv =
+                new JcaDigestCalculatorProviderBuilder().setProvider("BC").build();
 
-            return digCalcProv.get(algFinder.find(digestName));
-        }
-
-    public static void main(String[] args)
-            throws Exception
-    {
-        Security.addProvider(new BouncyCastleProvider());
-
-        DigestCalculator digCalc = createDigestCalculator("SHA-256");
-
-        OutputStream dOut = digCalc.getOutputStream();
-
-        dOut.write(Strings.toByteArray("Hello World!"));
-
-        dOut.close();
-
-        System.out.println(Hex.toHexString(digCalc.getDigest()));
+        return digCalcProv.get(algFinder.find(digestName));
     }
-
 }
