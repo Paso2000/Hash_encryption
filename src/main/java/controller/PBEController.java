@@ -50,7 +50,7 @@ public class PBEController {
             String hashFunction = view.getHashAlgorithm();
             System.out.println(plaintext + hashFunction);
             try {
-                result = hashAlgorithm.protectMessageHash(plaintext,hashFunction);
+                result = hashAlgorithm.protectMessageHash(plaintext,hashFunction, value);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }

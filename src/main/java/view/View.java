@@ -104,7 +104,7 @@ public class View extends JFrame{
                 "MD2", "MD5", "SHA-1", "SHA-256", "SHA-384", "SHA-512",
                 "HmacMD5", "HmacSHA1", "HmacSHA256", "HmacSHA384", "HmacSHA512"
             });
-        comboHash.setSelectedItem("HmacSHA256");
+        comboHash.setSelectedItem("MD2");
 
             JMenuItem algorithm = new JMenuItem("Algorithm");
             algorithm.addActionListener(new ActionListener() {
@@ -166,7 +166,8 @@ public class View extends JFrame{
       return Arrays.toString(passwordField.getPassword());
     }
 
-    public String getSymmetricAlgorithm() {return (String) comboCipher.getSelectedItem();}
+    public String getSymmetricAlgorithm() {
+        return (String) comboCipher.getSelectedItem();}
 
     public String getHashAlgorithm(){return (String) comboHash.getSelectedItem(); }
 
