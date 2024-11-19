@@ -12,8 +12,8 @@ public class View extends JFrame{
         private JComboBox<String> comboHash;
         private JMenuItem cipher;
         private JMenuItem decipher;
-        private JMenuItem protegerWithHash;
-        private JMenuItem verificarHash;
+        private JMenuItem protegerFileWithHash;
+        private JMenuItem verificarFileHash;
         private JMenuItem protegerMessageWithHash;
         private JMenuItem verificarMessageHash;
         private JMenuItem Exit;
@@ -51,9 +51,9 @@ public class View extends JFrame{
              decipher = new JMenuItem("Decipher");
             decipher.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
 
-            protegerWithHash = new JMenuItem("Protect with hash");
-            protegerWithHash.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK));
-            protegerWithHash.addActionListener(new ActionListener() {
+            protegerFileWithHash = new JMenuItem("Protect with hash");
+            protegerFileWithHash.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK));
+            protegerFileWithHash.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     // Crea un JFileChooser per selezionare un file
@@ -73,8 +73,8 @@ public class View extends JFrame{
                 }
             });
 
-            verificarHash = new JMenuItem("Verify hash");
-            verificarHash.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
+            verificarFileHash = new JMenuItem("Verify hash");
+            verificarFileHash.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
 
              protegerMessageWithHash = new JMenuItem("Protect message with hash");
              verificarMessageHash = new JMenuItem("Verify message hash");
@@ -85,8 +85,8 @@ public class View extends JFrame{
             // Aggiungi le voci di menu al menu "Fichero"
             menuFile.add(cipher);
             menuFile.add(decipher);
-            menuFile.add(protegerWithHash);
-            menuFile.add(verificarHash);
+            menuFile.add(protegerFileWithHash);
+            menuFile.add(verificarFileHash);
             menuFile.add(protegerMessageWithHash);
             menuFile.add(verificarMessageHash);
             menuFile.addSeparator(); // Aggiunge una linea di separazione
@@ -193,10 +193,12 @@ public class View extends JFrame{
     public void addMessageHashButtonListener(ActionListener listener) {
         protegerMessageWithHash.addActionListener(listener);
     }
-
-   // public void addFileSelectButtonListener(ActionListener listener) {
-    //    fileSelectButton.addActionListener(listener);
-    //}
+    public void addFileHashButtonListener(ActionListener listener) {
+        protegerFileWithHash.addActionListener(listener);
+    }
+    public void addVerifyFileHashButtonListener(ActionListener listener) {
+        verificarFileHash.addActionListener(listener);
+    }
 
     // Methods to view error message
     public void showError(String errorMessage) {

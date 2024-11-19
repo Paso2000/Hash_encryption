@@ -38,9 +38,27 @@ public class PBEController {
         this.view.addEncryptButtonListener(new EncryptButtonListener());
         this.view.addDecryptButtonListener(new DecryptButtonListener());
         this.view.addVerifyButtonListener(new VerifyButtonListener());
-        //this.view.addFileSelectButtonListener(new FileSelectButtonListener());
         this.view.addMessageHashButtonListener(new MessageHashButtonListener());
+        this.view.addFileHashButtonListener(new FileHashButtonListener());
+        this.view.addVerifyFileHashButtonListener(new VerifyFileHashButtonListener());
     }
+
+    class FileHashButtonListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            File f = getFile();
+
+        }
+    }
+
+    class VerifyFileHashButtonListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            File f = getFile();
+        }
+    }
+
 
     class MessageHashButtonListener implements ActionListener{
 
@@ -121,14 +139,13 @@ public class PBEController {
     }
 
     // Listener to select a file
-    class FileSelectButtonListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
+
+        public File getFile() {
             JFileChooser fileChooser = new JFileChooser();
             int returnValue = fileChooser.showOpenDialog(null);
             if (returnValue == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = fileChooser.getSelectedFile();
-                view.setSelectedFile(selectedFile);
+                return fileChooser.getSelectedFile();
             }
+            return null;
         }
-    }
 }
