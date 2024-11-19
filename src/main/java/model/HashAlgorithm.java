@@ -16,7 +16,7 @@ import org.bouncycastle.util.Strings;
 import org.bouncycastle.util.encoders.Hex;
 import utils.Header;
 import utils.Options;
-
+import org.apache.commons.io.output.CountingOutputStream;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -36,13 +36,15 @@ public class HashAlgorithm {
     private int iterationCount = 100;
     private byte[] salt = Hex.decode("0102030405060708");
 
+    private long bytetoDelete;
+
     private int macLength = 64;
 
     SecretKey macKey = new SecretKeySpec(
             Hex.decode(
                     "2ccd85dfc8d18cb5d84fef4b19855469" +
                             "9fece6e8692c9147b0da983f5b7bd413"), "HmacSHA256");
-    public byte[] protectMessageHash(String input, String algorithm, String password) throws Exception {
+    public String protectMessageHash(String input, String algorithm, String password) throws Exception {
         Security.addProvider(new BouncyCastleProvider());
 
         if(Objects.equals(algorithm, "HmacMD5") || Objects.equals(algorithm, "HmacSHA1") || Objects.equals(algorithm, "HmacSHA256") || Objects.equals(algorithm, "HmacSHA384") || Objects.equals(algorithm, "HmacSHA512")) {
@@ -56,49 +58,45 @@ public class HashAlgorithm {
 
             mac.update(password.getBytes());
 
-            return mac.doFinal();
+            return Base64.getEncoder().encodeToString(mac.doFinal());
 
         }else {
             InputStream inputStream = new ByteArrayInputStream(input.getBytes());
 
-            // Creazione dell'istanza MessageDigest per SHA-256
-            MessageDigest digest = MessageDigest.getInstance(algorithm);
+            MessageDigest digest = MessageDigest.getInstance(algorithm, "BC");
             digest.update(password.getBytes());
-            Header header = new Header(Options.OP_SIGNED, Options.OP_NONE_ALGORITHM, algorithm, digest.digest());
             // Creazione di un DigestInputStream per calcolare l'hash durante la lettura
             try ( DigestInputStream digestInputStream = new DigestInputStream(inputStream, digest)) {
-                byte[] buffer = new byte[1024];
+                byte[] buffer = new byte[4096];
                 while (digestInputStream.read(buffer) != -1) {
 
                 }
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                outputStream.write(input.getBytes());
+                digest = digestInputStream.getMessageDigest();
+                Header header = new Header(Options.OP_SIGNED, Options.OP_NONE_ALGORITHM, algorithm, digest.digest());
+                ByteArrayOutputStream arrayOut = new ByteArrayOutputStream();
+                CountingOutputStream outputStream = new CountingOutputStream(arrayOut);
                 header.save(outputStream);
+                bytetoDelete = outputStream.getByteCount();
+                outputStream.write(input.getBytes());
                 outputStream.close();
-                return Base64.getEncoder().encode(outputStream.toByteArray());            }
+                System.out.println(outputStream.getByteCount());
+                return Base64.getEncoder().encodeToString(arrayOut.toByteArray());
+            }
         }
     }
 
-    public String verifyHashMessage(byte[] data) throws Exception {
+    public String verifyHashMessage(String datas) throws Exception {
         Security.addProvider(new BouncyCastleProvider());
         try {
-            // Creazione di un ByteArrayOutputStream per scrivere i dati
+            byte[] data = Base64.getDecoder().decode(datas);
+            if (data.length > bytetoDelete) {
 
-            // Scrittura di dati di esempio
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                outputStream.write(data, (int) bytetoDelete, (int) (data.length - bytetoDelete));
+                outputStream.close();
 
-            // Conversione a byte array per manipolazione
-            // Verifica se ci sono almeno 30 byte da rimuovere
-            if (data.length > 30) {
-                // Creazione di un nuovo array senza gli ultimi 30 byte
-                byte[] truncatedData = new byte[data.length - 30];
-                System.arraycopy(data, 0, truncatedData, 0, data.length - 30);
-
-                // Scrittura dei dati troncati in un altro OutputStream (ad esempio un file)
-                OutputStream fileOutputStream = new FileOutputStream("output.dat");
-                fileOutputStream.write(truncatedData);
-                fileOutputStream.close();
-
-                System.out.println("Dati scritti nel file senza gli ultimi 30 byte.");
+                System.out.println("Dati scritti nel file senza gli ultimi 34 byte.");
+                return outputStream.toString();
             } else {
                 System.out.println("I dati sono meno di 30 byte, non è possibile rimuovere.");
             }

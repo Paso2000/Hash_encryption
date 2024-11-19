@@ -15,6 +15,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation("org.bouncycastle:bcpkix-jdk18on:1.79")
     implementation("org.bouncycastle:bcprov-jdk18on:1.79")
+    implementation ("commons-io:commons-io:2.11.0")
 }
 
 // Configurazione per il JAR

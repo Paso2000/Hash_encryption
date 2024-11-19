@@ -185,6 +185,11 @@ public class View extends JFrame{
     public void addDecryptButtonListener(ActionListener listener) {
         decipher.addActionListener(listener);
     }
+
+    public void addVerifyButtonListener(ActionListener listener) {
+        verificarMessageHash.addActionListener(listener);
+    }
+
     public void addMessageHashButtonListener(ActionListener listener) {
         protegerMessageWithHash.addActionListener(listener);
     }

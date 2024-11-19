@@ -25,7 +25,7 @@ public class PBEController {
     private HashAlgorithmFile hashAlgorithmFile;
     private HashAlgorithm hashAlgorithm;
     private View view;
-    private byte[] result;
+    private String result;
 
     public PBEController(PBEAlgorithm pbeAlgorithm, PBEAlgorithmFile pbeAlgorithmFile, View view, HashAlgorithm hashAlgorithm, HashAlgorithmFile hashAlgorithmFile) {
         this.pbeAlgorithm = pbeAlgorithm;
@@ -37,6 +37,7 @@ public class PBEController {
         // connect listener to button
         this.view.addEncryptButtonListener(new EncryptButtonListener());
         this.view.addDecryptButtonListener(new DecryptButtonListener());
+        this.view.addVerifyButtonListener(new VerifyButtonListener());
         //this.view.addFileSelectButtonListener(new FileSelectButtonListener());
         this.view.addMessageHashButtonListener(new MessageHashButtonListener());
     }
@@ -54,9 +55,23 @@ public class PBEController {
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
-            view.setResult(Hex.toHexString(result));
+            view.setResult(result);
 
 
+        }
+    }
+
+    class VerifyButtonListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String hashedTest = view.getInputText();
+            try {
+                String plainText = hashAlgorithm.verifyHashMessage(hashedTest);
+                view.setResult(plainText);
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 
