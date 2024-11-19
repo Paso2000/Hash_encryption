@@ -153,7 +153,6 @@ public class View extends JFrame{
     public File getSelectedFile() {
         return selectedFile;
     }
-
     // Methods to select a file
     public void setSelectedFile(File file) {
         this.selectedFile = file;
@@ -176,7 +175,6 @@ public class View extends JFrame{
     public void setResult(String result) {
         textArea.setText(result);
     }
-
     // button listener
     public void addEncryptButtonListener(ActionListener listener) {
         cipher.addActionListener(listener);

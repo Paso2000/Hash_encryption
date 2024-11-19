@@ -60,11 +60,16 @@ public class PBEController {
     }
 
     class VerifyFileHashButtonListener implements ActionListener{
-
         @Override
         public void actionPerformed(ActionEvent e) {
             File file = view.getFile();
-
+            String hashFunction = view.getHashAlgorithm();
+            String value = view.getHashValue();
+            try {
+                hashAlgorithmFile.hashVerifyFile(file,value,hashFunction);
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 
@@ -89,7 +94,6 @@ public class PBEController {
     }
 
     class VerifyButtonListener implements ActionListener{
-
         @Override
         public void actionPerformed(ActionEvent e) {
             String hashedTest = view.getInputText();
@@ -106,18 +110,15 @@ public class PBEController {
     class EncryptButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             try {
-                String plaintext = view.getInputText();
+                File file = view.getFile();
                 String password = view.getHashValue();
                 String SymmetricAlgorithm = view.getSymmetricAlgorithm();
-                File selectedFile = view.getSelectedFile();
-                if (selectedFile != null) {
-                    pbeAlgorithmFile.Encrypt(selectedFile, password, SymmetricAlgorithm);
-                    view.setResult("Successfully encrypted file: " + selectedFile.getPath() +
-                            "\nSize: " + selectedFile.length() + "byte");
-                } else {
-                    String encryptedText = pbeAlgorithm.Encrypt(plaintext, password, SymmetricAlgorithm);
-                    view.setResult("Ciphertext: " + encryptedText);
-                }
+                    pbeAlgorithmFile.Encrypt(file, password, SymmetricAlgorithm);
+                    view.setResult("Successfully encrypted file: " + file.getPath() +
+                            "\nSize: " + file.length() + "byte");
+              //      String encryptedText = pbeAlgorithm.Encrypt(plaintext, password, SymmetricAlgorithm);
+                //    view.setResult("Ciphertext: " + encryptedText);
+
             } catch (Exception ex) {
                 view.showError("Error during encryption: " + ex.getMessage());
             }
@@ -128,19 +129,15 @@ public class PBEController {
     class DecryptButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             try {
-                String encryptedText = view.getInputText();
+                File file = view.getFile();
                 String password = view.getHashValue();
                 String SymmetricAlgorithm = view.getSymmetricAlgorithm();
-                File selectedFile = view.getSelectedFile();
+                pbeAlgorithmFile.Decrypt(file, password, SymmetricAlgorithm);
+                view.setResult("Successfully encrypted file: " + file.getPath() +
+                            "\nSize: " + file.length() + "byte");
+                   // String decryptedText = pbeAlgorithm.Decrypt(encryptedText, password, SymmetricAlgorithm);
+                   // view.setResult("Plaintext: " + decryptedText);
 
-                if (selectedFile != null) {
-                    pbeAlgorithmFile.Decrypt(selectedFile, password, SymmetricAlgorithm);
-                    view.setResult("Successfully encrypted file: " + selectedFile.getPath() +
-                            "\nSize: " + selectedFile.length() + "byte");
-                } else {
-                    String decryptedText = pbeAlgorithm.Decrypt(encryptedText, password, SymmetricAlgorithm);
-                    view.setResult("Plaintext: " + decryptedText);
-                }
             } catch (Exception ex) {
                 view.showError("Error during encryption: " + ex.getMessage());
             }

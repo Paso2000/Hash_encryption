@@ -34,8 +34,8 @@ public class HashAlgorithmFile {
         byte[] fileBytes = Files.readAllBytes(inputPath);
         // Generating symmetric key for the chosen algorithm
 
-        // creating the path for the file .CIF
-        String encryptedFilePath = input.getParent() + File.separator + input.getName().replaceFirst("[.][^.]+$", "") + ".CIF";
+        // creating the path for the file .hsh
+        String encryptedFilePath = input.getParent() + File.separator + input.getName().replaceFirst("[.][^.]+$", "") + ".hsh";
         File encryptedFile = new File(encryptedFilePath);
         if (Objects.equals(algorithm, "HmacMD5") || Objects.equals(algorithm, "HmacSHA1") || Objects.equals(algorithm, "HmacSHA256") || Objects.equals(algorithm, "HmacSHA384") || Objects.equals(algorithm, "HmacSHA512")) {
             try {
@@ -86,6 +86,7 @@ public class HashAlgorithmFile {
                 FileOutputStream fileOut = new FileOutputStream(encryptedFile);
                 CountingOutputStream outputStream = new CountingOutputStream(fileOut);
                 header.save(outputStream);
+                bytetoDelete=outputStream.getByteCount();
                 System.out.println(outputStream.getByteCount());
                 outputStream.write(fileBytes);
                 outputStream.close();
@@ -93,30 +94,39 @@ public class HashAlgorithmFile {
             }
         }
     }
-    /*public void hashVerifyFile(File encryptedInput, String passwd, String algorithm) throws Exception {
+    public void hashVerifyFile(File encryptedInput, String passwd, String algorithm) throws Exception {
         Path encryptedPath = encryptedInput.toPath();
-        byte[] encryptedBytes = Files.readAllBytes(encryptedPath);
+        byte[] FileBytes = Files.readAllBytes(encryptedPath);
 
+        String VerifyedFilePath = encryptedInput.getParent() + File.separator + encryptedInput.getName().replaceFirst("[.][^.]+$", "") + "_decrypted.cla";
+        File VerifyedFile = new File(VerifyedFilePath);
         // Generating symmetric key for the chosen algorithm
 
+        if (FileBytes.length > bytetoDelete) {
+            try (FileOutputStream fileOut = new FileOutputStream(VerifyedFile);
+                 //create the CipherInputStream using the cipher and an ByteArrayInputStream that contains FileBytes
+                 ByteArrayInputStream cIn = new ByteArrayInputStream(FileBytes)) {
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                //writes every byte on the buffer decrypting it
+                while ((bytesRead = cIn.read(buffer)) != -1) {
+                    fileOut.write(buffer, (int) bytetoDelete, (int) (bytesRead-bytetoDelete));
+                }
+                 }
+
+            System.out.println("Dati scritti nel file senza gli ultimi 34 byte.");
+        } else {
+            System.out.println("I dati sono meno di 30 byte, non è possibile rimuovere.");
+        }
 
         // Creating the path for the decrypted file
-        String decryptedFilePath = encryptedInput.getParent() + File.separator + encryptedInput.getName().replaceFirst("[.][^.]+$", "") + "_decrypted.cla";
-        File decryptedFile = new File(decryptedFilePath);
+
 
         //create the file outputStream
-        try (FileOutputStream fileOut = new FileOutputStream(decryptedFile);
-             //create the CipherInputStream using the cipher and an ByteArrayInputStream that contains encryptedBytes
-             DigestInputStream cIn = new DigestInputStream(new FileInputStream(decryptedFile), digest)) {
-            byte[] buffer = new byte[4096];
-            int bytesRead;
-            //writes every byte on the buffer decrypting it
-            while ((bytesRead = cIn.read(buffer)) != -1) {
-                fileOut.write(buffer, 0, bytesRead);
-            }
+
+
             //for debugging
-            //System.out.println("Decrypted file path: " + decryptedFile.getAbsolutePath());
-        }
-    }*/
+            //System.out.println("Decrypted file path: " + VerifyedFile.getAbsolutePath());
+    }
 
 }
