@@ -46,7 +46,15 @@ public class PBEController {
     class FileHashButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
-            File f = getFile();
+            File file = view.getFile();
+            String hashFunction = view.getHashAlgorithm();
+            String value = view.getHashValue();
+            try {
+                hashAlgorithmFile.hashFileEncrypt(file,value,hashFunction);
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+
 
         }
     }
@@ -55,7 +63,8 @@ public class PBEController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            File f = getFile();
+            File file = view.getFile();
+
         }
     }
 
@@ -140,12 +149,4 @@ public class PBEController {
 
     // Listener to select a file
 
-        public File getFile() {
-            JFileChooser fileChooser = new JFileChooser();
-            int returnValue = fileChooser.showOpenDialog(null);
-            if (returnValue == JFileChooser.APPROVE_OPTION) {
-                return fileChooser.getSelectedFile();
-            }
-            return null;
-        }
 }

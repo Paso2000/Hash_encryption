@@ -33,6 +33,7 @@ public class PBEAlgorithmFile {
      * @return a ciphertext File.CIF
      */
     public void Encrypt(File input, String passwd, String algorithm) throws Exception {
+
         Path inputPath = input.toPath();
         byte[] fileBytes = Files.readAllBytes(inputPath);
 

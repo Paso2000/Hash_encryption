@@ -204,4 +204,12 @@ public class View extends JFrame{
     public void showError(String errorMessage) {
         JOptionPane.showMessageDialog(this, errorMessage);
     }
+    public File getFile() {
+        JFileChooser fileChooser = new JFileChooser();
+        int returnValue = fileChooser.showOpenDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            return fileChooser.getSelectedFile();
+        }
+        return null;
+    }
 }
