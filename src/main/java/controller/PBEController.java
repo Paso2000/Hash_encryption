@@ -47,12 +47,16 @@ public class PBEController {
         @Override
         public void actionPerformed(ActionEvent e) {
             File file = view.getFile();
-            String hashFunction = view.getHashAlgorithm();
-            String value = view.getHashValue();
-            try {
-                hashAlgorithmFile.hashFileEncrypt(file,value,hashFunction);
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
+            if (file != null) {
+                String hashFunction = view.getHashAlgorithm();
+                String value = view.getHashValue();
+                try {
+                    hashAlgorithmFile.hashFileEncrypt(file,hashFunction,value);
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+            } else {
+                System.out.println("Nessun file selezionato.");
             }
 
 
@@ -66,8 +70,14 @@ public class PBEController {
             String hashFunction = view.getHashAlgorithm();
             String value = view.getHashValue();
             try {
-                String result = hashAlgorithmFile.hashVerifyFile(file,value,hashFunction);
-                view.setResult(result);
+                String[] result = hashAlgorithmFile.hashVerifyFile(file,hashFunction,value);
+                if(result[0].equals(result[1])){
+                    view.setResult("Hash del file: " + result[0] + "\nHash ricalcolato: "+ result[1]+
+                     "\nFile non modificato, codice hash corrispondente");
+                }else{
+                    view.setResult("Hash del file: " + result[0] + "\nHash ricalcolato: "+ result[1]+
+                            "\nModified file or different passowrd");
+                }
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
