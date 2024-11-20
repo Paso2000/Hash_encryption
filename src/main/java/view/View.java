@@ -202,12 +202,20 @@ public class View extends JFrame{
     public void showError(String errorMessage) {
         JOptionPane.showMessageDialog(this, errorMessage);
     }
-    public File getFile() {
+    public static File getFile() {
+        // Crea un JFileChooser
         JFileChooser fileChooser = new JFileChooser();
+
+        // Mostra il dialogo di selezione file
         int returnValue = fileChooser.showOpenDialog(null);
+
+        // Verifica l'azione dell'utente
         if (returnValue == JFileChooser.APPROVE_OPTION) {
+            // Restituisci il file selezionato
             return fileChooser.getSelectedFile();
         }
+
+        // Nessun file selezionato
         return null;
     }
 }
