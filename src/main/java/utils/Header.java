@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.Arrays;
 
 /**
- * Clase para la gestión de la cabecera que se añade los mensajes cifrados (ficheros).
+ * Clase para la gestiï¿½n de la cabecera que se aï¿½ade los mensajes cifrados (ficheros).
  * Permite gestionar los diferentes atributos que se almacenan:
  * --------------------------------------------------------
  * |Mark|Operacion|Algoritmo1|Algoritmo2|Datos ...        |  
@@ -16,7 +16,7 @@ public class Header extends BasicHeader {
   private final static short MINHEADERLENGTH = MARKLENGTH + 4; 
   
   /**
-   * Operación realizada, codificada segun las definiciones de <code>Options</code>   
+   * Operaciï¿½n realizada, codificada segun las definiciones de <code>Options</code>   
    */
   private byte  operation;
   /**
@@ -40,8 +40,8 @@ public class Header extends BasicHeader {
   }
   /**
    * Constructor. Inicia los atributos con valores suministrados.
-   * @param algorithm1 - nombre estándar del algoritmo 1
-   * @param algorithm2 - nombre estándar del algoritmo 2
+   * @param algorithm1 - nombre estï¿½ndar del algoritmo 1
+   * @param algorithm2 - nombre estï¿½ndar del algoritmo 2
    * @param data - Datos usados con los algoritmos (salt, ...) 
    */
   public Header(byte operation,String algorithm1, String algorithm2,  byte[] data) {
@@ -74,7 +74,7 @@ public class Header extends BasicHeader {
   /**
    * Intenta cargar los datos de una cabecera desde un InputStream ya abierto.   
    * Si tiene exito, los datos quedan en la clase.
-   * @param r el InputStream abierto.
+   * @param is el InputStream abierto.
    * @throws Exception  Si ocurre un error de entrada o salida.
    * @return true si la carga es correcta, false en otro caso
    */
@@ -100,7 +100,7 @@ public class Header extends BasicHeader {
   
   /**
    * Intenta guardar la cabecera actual en un OutputStream ya abierto.
-   * @param fos el OutputStream abierto
+   * @param os el OutputStream abierto
    * @throws Exception  Si ocurre un error de entrada o salida.
    * @return true si tiene exito, false en otro caso
    */

@@ -23,9 +23,9 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
-import java.security.DigestInputStream;
-import java.security.MessageDigest;
-import java.security.Security;
+import java.security.*;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Objects;
 
@@ -48,70 +48,42 @@ public class HashAlgorithm {
         Security.addProvider(new BouncyCastleProvider());
 
         if (Objects.equals(algorithm, "HmacMD5") || Objects.equals(algorithm, "HmacSHA1") || Objects.equals(algorithm, "HmacSHA256") || Objects.equals(algorithm, "HmacSHA384") || Objects.equals(algorithm, "HmacSHA512")) {
-            try {
-                Mac mac = Mac.getInstance(algorithm, "BC");
-                SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-                PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterationCount, macLength);
-                SecretKey secretKey = skf.generateSecret(spec);
 
-                mac.init(secretKey);
-                mac.init(macKey);
-                try (ByteArrayInputStream inputStream = new ByteArrayInputStream(input.getBytes())) {
-                    byte[] buffer = new byte[1024]; // Buffer per la lettura a blocchi
-                    int bytesRead;
-                    while ((bytesRead = inputStream.read(buffer)) != -1) {
-                        // Aggiorna il MAC con i dati letti
-                        mac.update(buffer, 0, bytesRead);
-                    }
-                }
-
-                // Ottieni il MAC finale
-                byte[] macResult = mac.doFinal();
-                Header header = new Header(Options.OP_SIGNED, Options.OP_NONE_ALGORITHM, algorithm, macResult);
+            byte[] macResult = this.createMac(input.getBytes(), algorithm, password);
+            Header header = new Header(Options.OP_SIGNED, Options.OP_NONE_ALGORITHM, algorithm, macResult);
+            ByteArrayOutputStream arrayOut = new ByteArrayOutputStream();
+            CountingOutputStream outputStream = new CountingOutputStream(arrayOut);
+            header.save(outputStream);
+            bytetoDelete = outputStream.getByteCount();
+            outputStream.write(input.getBytes());
+            outputStream.close();
+            System.out.println(outputStream.getByteCount());
+            return Base64.getEncoder().encodeToString(arrayOut.toByteArray());
+            // Stampa il risultato del MAC in formato esadecimale
+            } else {
+                byte[] digest = this.createDigest(input.getBytes(),algorithm,password);
+                Header header = new Header(Options.OP_SIGNED, Options.OP_NONE_ALGORITHM, algorithm, digest);
                 ByteArrayOutputStream arrayOut = new ByteArrayOutputStream();
                 CountingOutputStream outputStream = new CountingOutputStream(arrayOut);
                 header.save(outputStream);
-                bytetoDelete = outputStream.getByteCount();
-                outputStream.write(input.getBytes());
-                outputStream.close();
-                System.out.println(outputStream.getByteCount());
-                return Base64.getEncoder().encodeToString(arrayOut.toByteArray());
-                // Stampa il risultato del MAC in formato esadecimale
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-            MessageDigest digest = MessageDigest.getInstance(algorithm, "BC");
-            digest.update(password.getBytes());
-            // Creazione di un DigestInputStream per calcolare l'hash durante la lettura
-            try (DigestInputStream digestInputStream = new DigestInputStream(inputStream, digest)) {
-                byte[] buffer = new byte[4096];
-                while (digestInputStream.read(buffer) != -1) {
-
-                }
-                digest = digestInputStream.getMessageDigest();
-                Header header = new Header(Options.OP_SIGNED, Options.OP_NONE_ALGORITHM, algorithm, digest.digest());
-                ByteArrayOutputStream arrayOut = new ByteArrayOutputStream();
-                CountingOutputStream outputStream = new CountingOutputStream(arrayOut);
-                header.save(outputStream);
+                System.out.println(Base64.getEncoder().encodeToString(header.getData()));
                 bytetoDelete = outputStream.getByteCount();
                 outputStream.write(input.getBytes());
                 outputStream.close();
                 System.out.println(outputStream.getByteCount());
                 return Base64.getEncoder().encodeToString(arrayOut.toByteArray());
             }
-        }
-        return null;
     }
 
-    public String verifyHashMessage(String datas) throws Exception {
+    public String verifyHashMessage(String datas, String hashFunction, String password) throws Exception {
         Security.addProvider(new BouncyCastleProvider());
         try {
             byte[] data = Base64.getDecoder().decode(datas);
             if (data.length > bytetoDelete) {
-
+                ByteArrayInputStream IStream = new ByteArrayInputStream(data);
+                Header header = new Header();
+                header.load(IStream);
+                System.out.println(Base64.getEncoder().encodeToString(header.getData()));
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 outputStream.write(data, (int) bytetoDelete, (int) (data.length - bytetoDelete));
                 outputStream.close();
@@ -126,5 +98,37 @@ public class HashAlgorithm {
             e.printStackTrace();
         }
         return null;
+    }
+    public byte[] createDigest(byte[] fileBytes, String algorithm, String password) throws NoSuchAlgorithmException, IOException {
+        InputStream inputStream = new ByteArrayInputStream(fileBytes);
+        MessageDigest digest = MessageDigest.getInstance(algorithm);
+        digest.update(password.getBytes());
+        // Creazione di un DigestInputStream per calcolare l'hash durante la lettura
+        try (DigestInputStream digestInputStream = new DigestInputStream(inputStream, digest)) {
+            byte[] buffer = new byte[4096];
+            while (digestInputStream.read(buffer) != -1) {
+
+            }
+            return digest.digest();
+        }}
+
+    public byte[] createMac(byte[] input,String algorithm, String password) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException, InvalidKeyException, IOException {
+        Mac mac = Mac.getInstance(algorithm, "BC");
+        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterationCount, macLength);
+        SecretKey secretKey = skf.generateSecret(spec);
+        mac.init(secretKey);
+        mac.init(macKey);
+        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(input)) {
+            byte[] buffer = new byte[1024]; // Buffer per la lettura a blocchi
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                // Aggiorna il MAC con i dati letti
+                mac.update(buffer, 0, bytesRead);
+            }
+        }
+
+        // Ottieni il MAC finale
+        return mac.doFinal();
     }
 }

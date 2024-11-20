@@ -66,7 +66,8 @@ public class PBEController {
             String hashFunction = view.getHashAlgorithm();
             String value = view.getHashValue();
             try {
-                hashAlgorithmFile.hashVerifyFile(file,value,hashFunction);
+                String result = hashAlgorithmFile.hashVerifyFile(file,value,hashFunction);
+                view.setResult(result);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
@@ -75,7 +76,6 @@ public class PBEController {
 
 
     class MessageHashButtonListener implements ActionListener{
-
         @Override
         public void actionPerformed(ActionEvent e) {
             String plaintext = view.getInputText();
@@ -97,12 +97,16 @@ public class PBEController {
         @Override
         public void actionPerformed(ActionEvent e) {
             String hashedTest = view.getInputText();
+            String value = view.getHashValue();
+            String hashFunction = view.getHashAlgorithm();
             try {
-                String plainText = hashAlgorithm.verifyHashMessage(hashedTest);
-                view.setResult(plainText);
+                result = hashAlgorithm.verifyHashMessage(hashedTest,hashFunction,value);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
+            view.setResult(result);
+
+
         }
     }
 
