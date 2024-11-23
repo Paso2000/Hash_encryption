@@ -46,8 +46,8 @@ public class PBEController {
     class FileHashButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
-            view.setSelectedFile(View.getFile());
-            File file= view.getSelectedFile();
+
+            File file= View.getFile();
             if (file != null) {
                 String hashFunction = view.getHashAlgorithm();
                 String value = view.getHashValue();
@@ -68,7 +68,7 @@ public class PBEController {
     class VerifyFileHashButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
-            File file = view.getFile();
+            File file = View.getFile();
             String hashFunction = view.getHashAlgorithm();
             String value = view.getHashValue();
             try {
@@ -126,7 +126,7 @@ public class PBEController {
     class EncryptButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             try {
-                File file = view.getFile();
+                File file = View.getFile();
                 String password = view.getHashValue();
                 String SymmetricAlgorithm = view.getSymmetricAlgorithm();
                     pbeAlgorithmFile.Encrypt(file, password, SymmetricAlgorithm);
@@ -145,7 +145,7 @@ public class PBEController {
     class DecryptButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             try {
-                File file = view.getFile();
+                File file = View.getFile();
                 String password = view.getHashValue();
                 String SymmetricAlgorithm = view.getSymmetricAlgorithm();
                 pbeAlgorithmFile.Decrypt(file, password, SymmetricAlgorithm);

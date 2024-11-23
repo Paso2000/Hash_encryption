@@ -132,13 +132,6 @@ public class View extends JFrame{
 
 
         }
-    public File getSelectedFile() {
-        return selectedFile;
-    }
-    // Methods to select a file
-    public void setSelectedFile(File file) {
-        this.selectedFile = file;
-    }
     public String getInputText() {
         return textArea.getText();
     }

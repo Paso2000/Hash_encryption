@@ -53,7 +53,6 @@ public class HashAlgorithmFile {
                  ByteArrayInputStream cIn = new ByteArrayInputStream(bytes)) {
                 header.load(cIn);
                 String strHeaderHash = Hex.toHexString(header.getData());
-                cIn.skip(bytetoDelete);
                 byte[] buffer = new byte[4096];
                 int bytesRead;
                 //writes every byte on the buffer decrypting it
@@ -65,6 +64,6 @@ public class HashAlgorithmFile {
         }else{
                     System.out.println("I dati sono meno di 30 byte, non è possibile rimuovere.");
                 }
-                return new String[]{new String("File not accepted")};
+                return new String[]{("File not accepted")};
             }
         }
