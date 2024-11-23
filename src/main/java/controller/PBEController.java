@@ -46,7 +46,8 @@ public class PBEController {
     class FileHashButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
-            File file = view.getFile();
+            view.setSelectedFile(View.getFile());
+            File file= view.getSelectedFile();
             if (file != null) {
                 String hashFunction = view.getHashAlgorithm();
                 String value = view.getHashValue();

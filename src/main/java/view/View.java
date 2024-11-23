@@ -53,25 +53,7 @@ public class View extends JFrame{
 
             protegerFileWithHash = new JMenuItem("Protect with hash");
             protegerFileWithHash.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK));
-            protegerFileWithHash.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    // Crea un JFileChooser per selezionare un file
-                    JFileChooser fileChooser = new JFileChooser();
-                    fileChooser.setDialogTitle("Select the file that has to be protected with hash");
 
-                    // Mostra la finestra di dialogo per la scelta del file
-                    int userSelection = fileChooser.showOpenDialog(frame);
-
-                    if (userSelection == JFileChooser.APPROVE_OPTION) {
-                        // Ottieni il file selezionato
-                        File fileToHash = fileChooser.getSelectedFile();
-                        JOptionPane.showMessageDialog(frame, "Selected File: " + fileToHash.getAbsolutePath(), "Selected File", JOptionPane.INFORMATION_MESSAGE);
-
-                        // Qui puoi implementare la logica per calcolare l'hash del file selezionato
-                    }
-                }
-            });
 
             verificarFileHash = new JMenuItem("Verify hash");
             verificarFileHash.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
