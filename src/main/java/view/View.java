@@ -147,8 +147,11 @@ public class View extends JFrame{
 
 
     // Methods to view output
-    public void setResult(String result) {
+    public void addResult(String result) {
         textArea.append(result+"\n\n");
+    }
+    public void setResult(String result) {
+        textArea.setText(result);
     }
     // button listener
     public void addEncryptButtonListener(ActionListener listener) {
