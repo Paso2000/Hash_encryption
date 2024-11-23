@@ -9,8 +9,6 @@ import view.View;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.Arrays;
-import java.util.Objects;
 
 /**
  * Controller class for managing the interaction between the View and the Model.
@@ -137,7 +135,7 @@ public class PBEController {
             }
             view.setResult(result);
         }else{
-            view.setResult("Inser a value");
+            view.setResult("Insert a value");
         }
     }
     }
