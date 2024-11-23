@@ -9,6 +9,8 @@ import view.View;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Controller class for managing the interaction between the View and the Model.
@@ -23,6 +25,10 @@ public class PBEController {
     private HashAlgorithm hashAlgorithm;
     private View view;
     private String result;
+
+    private String[] emptyArrray= {};
+
+    private String value;
 
     /**
      * Constructor for PBEController.
@@ -56,10 +62,13 @@ public class PBEController {
     class FileHashButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            //Value control
+            value = view.getHashValue();
+            if(!value.isEmpty()){
             File file = View.getFile();
+            //File control
             if (file != null) {
                 String hashFunction = view.getHashAlgorithm();
-                String value = view.getHashValue();
                 try {
                     String[] result = hashAlgorithmFile.hashFileEncrypt(file, hashFunction, value);
                     view.addResult("File hash: " + result[0] +
@@ -71,8 +80,10 @@ public class PBEController {
             } else {
                 view.addResult("No file selected");
             }
-        }
-    }
+        }else {
+                view.addResult("Insert a Value");
+            }
+    }}
 
     /**
      * Listener for the "Verify File Hash" button.
@@ -81,10 +92,11 @@ public class PBEController {
     class VerifyFileHashButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            value = view.getHashValue();
+            if(!value.isEmpty()){
             File file = View.getFile();
             if (file != null) {
                 String hashFunction = view.getHashAlgorithm();
-                String value = view.getHashValue();
                 try {
                     String[] result = hashAlgorithmFile.hashVerifyFile(file, hashFunction, value);
                     if (result[0].equals(result[1])) {
@@ -101,6 +113,8 @@ public class PBEController {
                 }
             } else {
                 view.addResult("No file selected");
+            }}else {
+                view.addResult("Insert a Value");
             }
         }
     }
@@ -112,8 +126,9 @@ public class PBEController {
     class MessageHashButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            value = view.getHashValue();
+            if(!value.isEmpty()){
             String plaintext = view.getInputText();
-            String value = view.getHashValue();
             String hashFunction = view.getHashAlgorithm();
             try {
                 result = hashAlgorithm.protectMessageHash(plaintext, hashFunction, value);
@@ -121,7 +136,10 @@ public class PBEController {
                 throw new RuntimeException(ex);
             }
             view.setResult(result);
+        }else{
+            view.setResult("Inser a value");
         }
+    }
     }
 
     /**
@@ -131,8 +149,9 @@ public class PBEController {
     class VerifyButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            value = view.getHashValue();
+            if(!value.isEmpty()){
             String hashedTest = view.getInputText();
-            String value = view.getHashValue();
             String hashFunction = view.getHashAlgorithm();
             try {
                 result = hashAlgorithm.verifyHashMessage(hashedTest, hashFunction, value);
@@ -140,8 +159,10 @@ public class PBEController {
                 throw new RuntimeException(ex);
             }
             view.setResult(result);
-        }
-    }
+        }else {
+                view.setResult("Insert a value");
+            }
+    }}
 
     /**
      * Listener for the "Encrypt File" button.

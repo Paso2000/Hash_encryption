@@ -137,7 +137,8 @@ public class View extends JFrame{
     }
 
     public String getHashValue() {
-      return Arrays.toString(passwordField.getPassword());
+        System.out.println(new String(passwordField.getPassword()));
+      return new String(passwordField.getPassword());
     }
 
     public String getSymmetricAlgorithm() {
