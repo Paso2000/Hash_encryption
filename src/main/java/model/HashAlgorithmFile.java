@@ -16,7 +16,7 @@ public class HashAlgorithmFile {
     private long bytetoDelete;
     private HashAlgorithm hashAlgorithm = new HashAlgorithm();
 
-    public String hashFileEncrypt(File input, String algorithm, String password) throws Exception {
+    public String[] hashFileEncrypt(File input, String algorithm, String password) throws Exception {
         Security.addProvider(new BouncyCastleProvider());
         Path inputPath = input.toPath();
         byte[] fileBytes = Files.readAllBytes(inputPath);
@@ -36,7 +36,7 @@ public class HashAlgorithmFile {
        outputStream.write(fileBytes);
        outputStream.close();
        System.out.println("File cifrato salvato come: " + encryptedFile.getAbsolutePath());
-       return Hex.toHexString(hash);
+       return new String[] {Hex.toHexString(hash),algorithm};
     }
     public String[] hashVerifyFile(File encryptedInput, String algorithm , String password) throws Exception {
         Path encryptedPath = encryptedInput.toPath();

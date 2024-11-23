@@ -51,7 +51,8 @@ public class PBEController {
                 String hashFunction = view.getHashAlgorithm();
                 String value = view.getHashValue();
                 try {
-                    hashAlgorithmFile.hashFileEncrypt(file,hashFunction,value);
+                    String[] result = hashAlgorithmFile.hashFileEncrypt(file,hashFunction,value);
+                    view.setResult("File hash:"+ result[0]+ "\nWith the Algorithm: "+ result[1]);
                 } catch (Exception ex) {
                     throw new RuntimeException(ex);
                 }
